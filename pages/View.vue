@@ -4,19 +4,57 @@
       <v-container>
         <v-row>
           <v-col xs md v-for="(day, key) in days">
-            <v-btn @click="fetchTiraura(day)">
+            <v-btn @click="fetchTiraura(day)" color="blue-grey darken-1" dark>
               {{ day }}
             </v-btn>
           </v-col>
         </v-row>
-        <v-row  v-for="(i, index) in tirauraThumbnail" justify="center">
-          <v-col cols=3 v-for ="j in 3">
-            <v-btn x-large elevation="8">
-              <!-- {{ i["title"] }} -->
-              {{ tirauraThumbnail[index+j] }}
+        <v-row v-for="i in tirauraThumbnail">
+          <v-col>
+            <v-btn
+              block
+              x-large
+              elevation="8"
+              @click="fetchTirauraText(i['time'], tirauraThumbnail)"
+            >
+              {{ i["title"] }}
             </v-btn>
           </v-col>
         </v-row>
+
+        <!-- ダイアログ -->
+        <v-row justify="center">
+          <v-dialog v-model="isDialog" scrollable max-width="300px">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn color="primary" dark v-bind="attrs" v-on="on">
+                Open Dialog
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-title>Select Country</v-card-title>
+              <v-divider></v-divider>
+              <v-card-text style="height: 300px"> 
+                {{text}}
+              </v-card-text>
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-btn color="blue darken-1" text @click="dialog = false">
+                  Close
+                </v-btn>
+                <v-btn color="blue darken-1" text @click="dialog = false">
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-row>
+
+        <!-- <v-dialog v-model="isDialog" scrollable max-width="300px">
+          <tiraura-text-view></tiraura-text-view>
+        </v-dialog> -->
+
+
+
       </v-container>
     </v-app>
   </div>
@@ -27,16 +65,36 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import "date-utils";
+import tirauraTextView from "../components/tirauraTextView.vue";
 
 export default {
+  components: { tirauraTextView },
   layout: "MenuBar",
   data: () => ({
     days: ["today", "yesterday"],
     tirauraThumbnail: [],
+    isDialog: false,
+    text:"",
   }),
   methods: {
-    //DBからチラ裏情報取得
     /**
+     * 今日の日付をYYYYMMDD形式で取得
+     */
+    getTodayYYYYMMDD() {
+      let date = new Date();
+      let today = date.toFormat("YYYYMMDD");
+      return today;
+    },
+
+    getYesterdayYYYYMMDD() {
+      let date = new Date();
+      date.setDate(date.getDate() - 1);
+      let yesterday = date.toFormat("YYYYMMDD");
+      return yesterday;
+    },
+
+    /**
+     * DBからチラ裏情報取得
      * @param {string} dt クリックしたのがtodayかyesterdayかを判別
      */
     fetchTiraura(dt) {
@@ -45,19 +103,13 @@ export default {
         let firebaseApp = firebase.initializeApp(this.$firebaseConfig);
       }
 
-      //日付取得
-      let date = new Date();
       let concat = "";
-
-      let today = date.toFormat("YYYYMMDD");
-      date.setDate(date.getDate() - 1);
-      let yesterday = date.toFormat("YYYYMMDD");
 
       //クリックしたボタンによって今日or昨日のチラ裏情報取得
       if (dt === "today") {
-        concat = today;
+        concat = this.getTodayYYYYMMDD();
       } else if (dt === "yesterday") {
-        concat = yesterday;
+        concat = this.getYesterdayYYYYMMDD();
       }
 
       //データベースにアクセス
@@ -76,12 +128,25 @@ export default {
           console.log("Error getting documents", err);
         });
 
-
       //重複の削除
       this.tirauraThumbnail = this.tirauraThumbnail.filter((x, i, self) => {
         self.indexOf(x) === i; //引数の値で検索
         //selfはthisと同義
       });
+    },
+
+    /**
+     * ボタン押下されたとき呼ばれる
+     * 引数で受け取ったキー(時間)で配列からtextを取得
+     * @param {String} keyValue DBに入ってるキー
+     */
+    fetchTirauraText(keyValue, tiraura) {
+      let returnValue  = tiraura.filter((object)=>{
+        return object.time == keyValue;  
+      }).shift();
+      this.text = returnValue.text;
+      console.log(this.text);
+
     },
   },
 };

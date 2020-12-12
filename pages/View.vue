@@ -24,28 +24,19 @@
 
         <!-- ダイアログ -->
         <v-row justify="center">
+          <!-- v-modelでisDialog=trueのときだけダイアログ表示するようにしている -->
           <v-dialog v-model="isDialog" scrollable max-width="300px">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn color="primary" dark v-bind="attrs" v-on="on">
+            <!-- 特定の条件でポップアップするトリガー用のスロット追加 -->
+            <template v-slot:activator="{ on}">
+              <!-- ポップアップを追加したい要素に対してv=on"on"を追加 -->
+              <v-btn color="primary" dark  v-on="on">
                 Open Dialog
               </v-btn>
-            </template>
-            <v-card>
-              <v-card-title>Select Country</v-card-title>
-              <v-divider></v-divider>
-              <v-card-text style="height: 300px"> 
-                {{text}}
-              </v-card-text>
-              <v-divider></v-divider>
-              <v-card-actions>
-                <v-btn color="blue darken-1" text @click="dialog = false">
-                  Close
-                </v-btn>
-                <v-btn color="blue darken-1" text @click="dialog = false">
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-card>
+            </template>            
+            <!-- ポップアップの内容 -->
+            <!-- :があることで:v-bindの短縮形 -->
+            <!-- v-bindで属性(propsで指定した名前)名指定して、属性に入れる値を指定 -->
+            <tiraura-text-view :text="text"></tiraura-text-view>
           </v-dialog>
         </v-row>
 

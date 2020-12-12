@@ -181,6 +181,44 @@ firestoreのセキュリティールールを変更しましょう。
 ## デプロイ
 ここまで来たのでひとまずデプロイしてサイトを公開してみましょう。
 
+コンソールで以下を実行。
+
+```shell
+npm install -g firebase-tools #firebase CLIの導入
+firebase init
+```
+
+以下のような物が出るので、スペースキーで必要なものを選択。
+今回はfirestoreとHostingを選びます。
+
+```shell
+  C:\Users\kuro\Desktop\Programming\vue\YourDiary
+
+? Are you ready to proceed? Yes
+? Which Firebase CLI features do you want to set up for this folder? Press Space to select features, then Enter to confirm your choices. 
+ ( ) Database: Deploy Firebase Realtime Database Rules
+ (*) Firestore: Deploy rules and create indexes for Firestore
+ ( ) Functions: Configure and deploy Cloud Functions
+>(*) Hosting: Configure and deploy Firebase Hosting sites
+ ( ) Storage: Deploy Cloud Storage security rules
+ ( ) Emulators: Set up local emulators for Firebase features
+ ( ) Remote Config: Get, deploy, and rollback configurations for Remote Config
+```
+
+その後も色々と聞かれますが、基本的にはEnterですすめて問題ありません。
+
+以下コマンドを実行してデプロイします。
+
+```shell
+firebase deploy
+```
+
+ちなみにデプロイ取り消しは以下のコマンド。
+
+```shell
+firebase hosting:disable
+```
+
 ### 参考サイト
 公式クイックスタート firestoreの使い方
 https://firebase.google.com/docs/firestore/quickstart?hl=ja#top_of_page

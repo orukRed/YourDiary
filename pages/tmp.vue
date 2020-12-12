@@ -11,31 +11,34 @@
         </v-row>
         <v-row v-for="i in tirauraThumbnail">
           <v-col>
-            <!-- v-modelでisDialog=trueのときだけダイアログ表示するようにしている -->
-            <v-dialog v-model="isDialog" scrollable max-width="700px">
-              <!-- 特定の条件でポップアップするトリガー用のスロット追加 -->
-              <template v-slot:activator="{ on }">
-              <!-- ポップアップを追加したい要素に対してv=on"on"を追加 -->
-              <v-btn
-                block
-                x-large
-                elevation="8"
-                v-on="on"                
-                @click="fetchTirauraText(i['time'], tirauraThumbnail)"
-              >
-                {{i["title"]}}
-                </v-btn>
-              </template>            
-              <!-- ポップアップの内容 -->
-              <!-- :があることで:v-bindの短縮形 -->
-              <!-- v-bindで属性(propsで指定した名前)名指定して、属性に入れる変数を指定 -->
-              <tiraura-text-view :title="title"  :text="text"  ></tiraura-text-view>
-
-            </v-dialog>
+            <v-btn
+              block
+              x-large
+              elevation="8"
+              @click="fetchTirauraText(i['time'], tirauraThumbnail)"
+            >
+              {{ i["title"] }}
+            </v-btn>
           </v-col>
         </v-row>
 
-
+        <!-- ダイアログ -->
+        <v-row justify="center">
+          <!-- v-modelでisDialog=trueのときだけダイアログ表示するようにしている -->
+          <v-dialog v-model="isDialog" scrollable max-width="1000px">
+            <!-- 特定の条件でポップアップするトリガー用のスロット追加 -->
+            <template v-slot:activator="{on}">
+              <!-- ポップアップを追加したい要素に対してv=on"on"を追加 -->
+              <v-btn color="primary" dark  v-on="on">
+                Open Dialog
+              </v-btn>
+            </template>            
+            <!-- ポップアップの内容 -->
+            <!-- :があることで:v-bindの短縮形 -->
+            <!-- v-bindで属性(propsで指定した名前)名指定して、属性に入れる変数を指定 -->
+            <tiraura-text-view :text="text" ></tiraura-text-view>
+          </v-dialog>
+        </v-row>
 
 
       </v-container>
@@ -57,8 +60,7 @@ export default {
     days: ["today", "yesterday"],
     tirauraThumbnail: [],
     isDialog: false,
-    text: "",
-    title:"",
+    text:"",
   }),
   methods: {
     /**
@@ -125,13 +127,12 @@ export default {
      * @param {String} keyValue DBに入ってるキー
      */
     fetchTirauraText(keyValue, tiraura) {
-      let returnValue = tiraura
-        .filter((object) => {
-          return object.time == keyValue;
-        })
-        .shift();
+      let returnValue  = tiraura.filter((object)=>{
+        return object.time == keyValue;  
+      }).shift();
       this.text = returnValue.text;
-      this.title= returnValue.title;
+      console.log(this.text);
+
     },
   },
 };

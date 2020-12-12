@@ -184,6 +184,7 @@ firestoreのセキュリティールールを変更しましょう。
 コンソールで以下を実行。
 
 ```shell
+npm run generate # distフォルダに実行ファイルを生成
 npm install -g firebase-tools #firebase CLIの導入
 firebase init
 ```
@@ -205,7 +206,26 @@ firebase init
  ( ) Remote Config: Get, deploy, and rollback configurations for Remote Config
 ```
 
+下記の質問ではdistを入力してEnterを押してください。
+
+```shell
+? What do you want to use as your public directory?  dist
+```
+
+また、nuxtでSPA(single page application)を作成している場合はいかにYes
+
+```shell
+? Configure as a single-page app (rewrite all urls to /index.html)? Yes
+```
+
+こっちはNoにしてください。
+Yesの場合、firebaseデフォルトのページに差し替わります。
+```
+? File dist/index.html already exists. Overwrite? No
+```
+
 その後も色々と聞かれますが、基本的にはEnterですすめて問題ありません。
+
 
 以下コマンドを実行してデプロイします。
 

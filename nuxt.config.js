@@ -11,8 +11,8 @@ export default {
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
-    titleTemplate: '%s - YourDiary',
-    title: 'YourDiary',
+    titleTemplate: '%s - Tiraura',
+    title: 'Tiraura',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
